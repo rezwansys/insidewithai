@@ -23,12 +23,12 @@
         <ol>
             <li><strong>Install Python</strong>: Ensure Python 3.8+ is installed.</li>
             <li><strong>Install Required Libraries</strong>:
-                <pre><code>pip install snowflake-connector-python pandas numpy scikit-learn matplotlib tensorflow keras</code></pre>
+                <pre><code class="shell">pip install snowflake-connector-python pandas numpy scikit-learn matplotlib tensorflow keras</code></pre>
             </li>
             <li><strong>DeepSeek Setup</strong>: If DeepSeek is a custom library or framework, ensure it's installed and configured locally.</li>
         </ol>
         <h3>Step 2: Connect to Snowflake</h3>
-        <pre><code>import snowflake.connector
+        <pre><code class="python">import snowflake.connector
 
 # Snowflake connection details
 conn = snowflake.connector.connect(
@@ -58,9 +58,9 @@ ORDER BY
 import pandas as pd
 df = pd.read_sql(query, conn)
 conn.close()
-        </pre></code>
+        </code></pre>
         <h3>Step 3: Preprocess the Data</h3>
-        <pre><code># Convert START_TIME to datetime
+        <pre><code class="python"># Convert START_TIME to datetime
 df['START_TIME'] = pd.to_datetime(df['START_TIME'])
 
 # Aggregate data by day
@@ -72,11 +72,11 @@ df_daily = df.groupby([pd.Grouper(key='START_TIME', freq='D'), 'WAREHOUSE_NAME']
 
 # Handle missing values
 df_daily.fillna(0, inplace=True)
-        </pre></code>
+        </code></pre>
         <h3>Step 4: Build a Forecasting Model</h3>
         <p>Use a time-series forecasting model (e.g., LSTM or Prophet) to predict future capacity needs.</p>
         <h4>Option 1: Using LSTM (Deep Learning)</h4>
-        <pre><code>from sklearn.preprocessing import MinMaxScaler
+        <pre><code class="python">from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
 import numpy as np
@@ -107,9 +107,9 @@ model.compile(loss='mean_squared_error', optimizer='adam')
 
 # Train the model
 model.fit(X, y, epochs=20, batch_size=32, verbose=1)
-        </pre></code>
+        </code></pre>
         <h4>Option 2: Using Prophet (Statistical Model)</h4>
-        <pre><code>from prophet import Prophet
+        <pre><code class="python">from prophet import Prophet
 
 # Prepare data for Prophet
 prophet_df = df_daily[['START_TIME', 'CREDITS_USED']].rename(columns={'START_TIME': 'ds', 'CREDITS_USED': 'y'})
@@ -121,9 +121,9 @@ model.fit(prophet_df)
 # Forecast for the next 30 days
 future = model.make_future_dataframe(periods=30)
 forecast = model.predict(future)
-        </pre></code>
+        </code></pre>
         <h3>Step 5: Generate Recommendations</h3>
-        <pre><code>def generate_recommendations(forecast):
+        <pre><code class="python">def generate_recommendations(forecast):
     avg_credits = forecast['yhat'].mean()
     if avg_credits > 100:  # Example threshold
         return "Consider scaling up your warehouse size or enabling auto-scaling."
@@ -133,18 +133,18 @@ forecast = model.predict(future)
 # Example usage
 recommendation = generate_recommendations(forecast)
 print(recommendation)
-        </pre></code>
+        </code></pre>
         <h3>Step 6: Simulate Impact of New Workloads</h3>
-        <pre><code>def simulate_workload(forecast, additional_credits):
+        <pre><code class="python">def simulate_workload(forecast, additional_credits):
     forecast['simulated_usage'] = forecast['yhat'] + additional_credits
     return forecast
 
 # Example simulation
 simulated_forecast = simulate_workload(forecast, additional_credits=50)
 print(simulated_forecast[['ds', 'yhat', 'simulated_usage']].tail())
-        </pre></code>
+        </code></pre>
         <h3>Step 7: Visualize Results</h3>
-        <pre><code>import matplotlib.pyplot as plt
+        <pre><code class="python">import matplotlib.pyplot as plt
 
 # Plot historical and forecasted usage
 plt.figure(figsize=(12, 6))
@@ -156,7 +156,7 @@ plt.xlabel('Date')
 plt.ylabel('Credits Used')
 plt.legend()
 plt.show()
-        </pre></code>
+        </code></pre>
         <h3>Step 8: Deploy the AI Agent Locally</h3>
         <ol>
             <li>Wrap the above code into a Python script or a Flask/Dash application.</li>
