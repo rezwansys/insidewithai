@@ -8,13 +8,14 @@
 </head>
 <body>
     <header>
-        <h1>Welcome to Inside with AI</h1>
+        <h1>Welcome 2 Inside with AI</h1>
         <p>Your gateway to the world of Artificial Intelligence</p>
         <nav>
             <ul>
                 <li><a href="#about">About Us</a></li>
                 <li><a href="#mission">Our Mission</a></li>
                 <li><a href="#models">AI Models</a></li>
+                <li><a href="ai-agent.html">AI Agent</a></li>
             </ul>
         </nav>
     </header>
@@ -55,6 +56,161 @@
                     <strong>YOLO (You Only Look Once)</strong>: A real-time object detection system used in surveillance and autonomous driving.
                 </li>
             </ul>
+        </section>
+        <section id="ai-agent">
+            <h2>AI Agent: Capacity Planning in Snowflake</h2>
+            <p>Creating an AI agent for <strong>Capacity Planning</strong> in Snowflake using <strong>DeepSeek</strong> locally involves leveraging Snowflake's <strong>Account Usage</strong> schema to extract usage metrics and storage information, then building a forecasting and recommendation system. Below is a step-by-step guide to building this AI agent:</p>
+            <h3>Step 1: Set Up Your Local Environment</h3>
+            <ol>
+                <li><strong>Install Python</strong>: Ensure Python 3.8+ is installed.</li>
+                <li><strong>Install Required Libraries</strong>:
+                    <pre><code>pip install snowflake-connector-python pandas numpy scikit-learn matplotlib tensorflow keras</code></pre>
+                </li>
+                <li><strong>DeepSeek Setup</strong>: If DeepSeek is a custom library or framework, ensure it's installed and configured locally.</li>
+            </ol>
+            <h3>Step 2: Connect to Snowflake</h3>
+            <pre><code>import snowflake.connector
+
+# Snowflake connection details
+conn = snowflake.connector.connect(
+    user='your_username',
+    password='your_password',
+    account='your_account',
+    warehouse='your_warehouse',
+    database='your_database',
+    schema='your_schema'
+)
+
+# Query to fetch usage metrics
+query = """
+SELECT 
+    START_TIME, 
+    WAREHOUSE_NAME, 
+    CREDITS_USED, 
+    BYTES_SCANNED, 
+    QUERY_COUNT
+FROM 
+    SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY
+ORDER BY 
+    START_TIME;
+"""
+
+# Fetch data into a Pandas DataFrame
+import pandas as pd
+df = pd.read_sql(query, conn)
+conn.close()
+            </pre></code>
+            <h3>Step 3: Preprocess the Data</h3>
+            <pre><code># Convert START_TIME to datetime
+df['START_TIME'] = pd.to_datetime(df['START_TIME'])
+
+# Aggregate data by day
+df_daily = df.groupby([pd.Grouper(key='START_TIME', freq='D'), 'WAREHOUSE_NAME']).agg({
+    'CREDITS_USED': 'sum',
+    'BYTES_SCANNED': 'sum',
+    'QUERY_COUNT': 'sum'
+}).reset_index()
+
+# Handle missing values
+df_daily.fillna(0, inplace=True)
+            </pre></code>
+            <h3>Step 4: Build a Forecasting Model</h3>
+            <p>Use a time-series forecasting model (e.g., LSTM or Prophet) to predict future capacity needs.</p>
+            <h4>Option 1: Using LSTM (Deep Learning)</h4>
+            <pre><code>from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense
+import numpy as np
+
+# Prepare data for LSTM
+def create_dataset(data, look_back=30):
+    X, y = [], []
+    for i in range(len(data) - look_back):
+        X.append(data[i:(i + look_back)])
+        y.append(data[i + look_back])
+    return np.array(X), np.array(y)
+
+# Normalize data
+scaler = MinMaxScaler()
+scaled_data = scaler.fit_transform(df_daily[['CREDITS_USED']])
+
+# Create training data
+look_back = 30
+X, y = create_dataset(scaled_data, look_back)
+X = X.reshape(X.shape[0], X.shape[1], 1)
+
+# Build LSTM model
+model = Sequential()
+model.add(LSTM(50, return_sequences=True, input_shape=(look_back, 1)))
+model.add(LSTM(50))
+model.add(Dense(1))
+model.compile(loss='mean_squared_error', optimizer='adam')
+
+# Train the model
+model.fit(X, y, epochs=20, batch_size=32, verbose=1)
+            </pre></code>
+            <h4>Option 2: Using Prophet (Statistical Model)</h4>
+            <pre><code>from prophet import Prophet
+
+# Prepare data for Prophet
+prophet_df = df_daily[['START_TIME', 'CREDITS_USED']].rename(columns={'START_TIME': 'ds', 'CREDITS_USED': 'y'})
+
+# Train Prophet model
+model = Prophet()
+model.fit(prophet_df)
+
+# Forecast for the next 30 days
+future = model.make_future_dataframe(periods=30)
+forecast = model.predict(future)
+            </pre></code>
+            <h3>Step 5: Generate Recommendations</h3>
+            <pre><code>def generate_recommendations(forecast):
+    avg_credits = forecast['yhat'].mean()
+    if avg_credits > 100:  # Example threshold
+        return "Consider scaling up your warehouse size or enabling auto-scaling."
+    else:
+        return "Current usage is within expected limits. No scaling required."
+
+# Example usage
+recommendation = generate_recommendations(forecast)
+print(recommendation)
+            </pre></code>
+            <h3>Step 6: Simulate Impact of New Workloads</h3>
+            <pre><code>def simulate_workload(forecast, additional_credits):
+    forecast['simulated_usage'] = forecast['yhat'] + additional_credits
+    return forecast
+
+# Example simulation
+simulated_forecast = simulate_workload(forecast, additional_credits=50)
+print(simulated_forecast[['ds', 'yhat', 'simulated_usage']].tail())
+            </pre></code>
+            <h3>Step 7: Visualize Results</h3>
+            <pre><code>import matplotlib.pyplot as plt
+
+# Plot historical and forecasted usage
+plt.figure(figsize=(12, 6))
+plt.plot(prophet_df['ds'], prophet_df['y'], label='Historical Usage')
+plt.plot(forecast['ds'], forecast['yhat'], label='Forecasted Usage', color='orange')
+plt.fill_between(forecast['ds'], forecast['yhat_lower'], forecast['yhat_upper'], color='orange', alpha=0.2)
+plt.title('Snowflake Warehouse Usage Forecast')
+plt.xlabel('Date')
+plt.ylabel('Credits Used')
+plt.legend()
+plt.show()
+            </pre></code>
+            <h3>Step 8: Deploy the AI Agent Locally</h3>
+            <ol>
+                <li>Wrap the above code into a Python script or a Flask/Dash application.</li>
+                <li>Schedule the script to run periodically using a task scheduler (e.g., <code>cron</code> on Linux or Task Scheduler on Windows).</li>
+                <li>Output recommendations and forecasts to a local file or dashboard.</li>
+            </ol>
+            <h3>Example Output</h3>
+            <ul>
+                <li><strong>Forecast</strong>: Predicted warehouse usage for the next 30 days.</li>
+                <li><strong>Recommendation</strong>: "Consider scaling up your warehouse size or enabling auto-scaling."</li>
+                <li><strong>Simulation</strong>: Impact of adding 50 credits to daily usage.</li>
+            </ul>
+            <p>By following these steps, you can build a <strong>Capacity Planning AI Agent</strong> locally using Snowflake data and DeepSeek (or other AI frameworks). This agent will help you forecast future capacity needs, provide scaling recommendations, and simulate the impact of new workloads.</p>
         </section>
     </main>
     <footer>
