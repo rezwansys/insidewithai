@@ -28,7 +28,6 @@ footer {
     position: fixed;
     width: 100%;
     bottom: 0;
-    font-size: 0.8em;
 }
 
 nav ul {
@@ -52,66 +51,4 @@ nav ul li a {
 
 nav ul li a:hover {
     background-color: #4CAF50;
-}
-
-/* Add styles for shell commands */
-code.shell {
-    background-color: #f4f4f4;
-    color: #333;
-    padding: 5px;
-    border-radius: 3px;
-    display: block;
-    margin: 10px 0;
-}
-
-/* Add styles for Python code */
-code.python {
-    background-color: #f4f4f4;
-    color: #333;
-    padding: 5px;
-    border-radius: 3px;
-    display: block;
-    margin: 10px 0;
-}
-
-/* Add styles for SQL queries */
-code.sql {
-    background-color: #f4f4f4;
-    color: #333;
-    padding: 5px;
-    border-radius: 3px;
-    display: block;
-    margin: 10px 0;
-}
-
-/* Add styles for Frontend (React.js) */
-code.frontend {
-    background-color: #f4f4f4;
-    color: #333;
-    padding: 5px;
-    border-radius: 3px;
-    display: block;
-    margin: 10px 0;
-}
-
-## 6. Future Enhancements
-- Add user authentication to save preferences.
-- Use sentiment analysis to highlight positive/negative news.
-- Integrate a chatbot for user interaction.
-- Add a recommendation system for personalized content.
-
-This project combines web development, AI, and API integration. Let me know if you'd like more details on any specific part! 🚀
-        </script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                const markdownSource = document.getElementById('markdown-source').textContent;
-                const htmlContent = marked(markdownSource);
-                document.getElementById('markdown-content').innerHTML = htmlContent;
-            });
-        </script>
-    </main>
-    <footer>
-        <p>&copy; 2023 Inside with AI. All rights reserved.</p>
-    </footer>
-</body>
-</html> 
+} 
