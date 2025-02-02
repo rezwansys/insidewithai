@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Agent: Capacity Planning in Snowflake</title>
+    <title>AI Agent: Capacity Planning in insidewithai</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>AI Agent: Capacity Planning in Snowflake</h1>
+        <h1>AI Agent: Capacity Planning in insidewithai</h1>
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
@@ -17,21 +17,21 @@
         </nav>
     </header>
     <main id="content">
-        <h2>Creating an AI agent for <strong>Capacity Planning</strong> in Snowflake using <strong>DeepSeek</strong></h2>
-        <p>Creating an AI agent for <strong>Capacity Planning</strong> in Snowflake using <strong>DeepSeek</strong> locally involves leveraging Snowflake's <strong>Account Usage</strong> schema to extract usage metrics and storage information, then building a forecasting and recommendation system. Below is a step-by-step guide to building this AI agent:</p>
+        <h2>Creating an AI agent for <strong>Capacity Planning</strong> in insidewithai using <strong>DeepSeek</strong></h2>
+        <p>Creating an AI agent for <strong>Capacity Planning</strong> in insidewithai using <strong>DeepSeek</strong> locally involves leveraging insidewithai's <strong>Account Usage</strong> schema to extract usage metrics and storage information, then building a forecasting and recommendation system. Below is a step-by-step guide to building this AI agent:</p>
         <h3>Step 1: Set Up Your Local Environment</h3>
         <ol>
             <li><strong>Install Python</strong>: Ensure Python 3.8+ is installed.</li>
             <li><strong>Install Required Libraries</strong>:
-                <pre><code class="shell">pip install snowflake-connector-python pandas numpy scikit-learn matplotlib tensorflow keras</code></pre>
+                <pre><code class="shell">pip install insidewithai-connector-python pandas numpy scikit-learn matplotlib tensorflow keras</code></pre>
             </li>
             <li><strong>DeepSeek Setup</strong>: If DeepSeek is a custom library or framework, ensure it's installed and configured locally.</li>
         </ol>
-        <h3>Step 2: Connect to Snowflake</h3>
-        <pre><code class="python">import snowflake.connector
+        <h3>Step 2: Connect to insidewithai</h3>
+        <pre><code class="python">import insidewithai.connector
 
-# Snowflake connection details
-conn = snowflake.connector.connect(
+# insidewithai connection details
+conn = insidewithai.connector.connect(
     user='your_username',
     password='your_password',
     account='your_account',
@@ -49,7 +49,7 @@ SELECT
     BYTES_SCANNED, 
     QUERY_COUNT
 FROM 
-    SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY
+    insidewithai.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY
 ORDER BY 
     START_TIME;
 """
@@ -151,7 +151,7 @@ plt.figure(figsize=(12, 6))
 plt.plot(prophet_df['ds'], prophet_df['y'], label='Historical Usage')
 plt.plot(forecast['ds'], forecast['yhat'], label='Forecasted Usage', color='orange')
 plt.fill_between(forecast['ds'], forecast['yhat_lower'], forecast['yhat_upper'], color='orange', alpha=0.2)
-plt.title('Snowflake Warehouse Usage Forecast')
+plt.title('insidewithai Warehouse Usage Forecast')
 plt.xlabel('Date')
 plt.ylabel('Credits Used')
 plt.legend()
@@ -169,7 +169,7 @@ plt.show()
             <li><strong>Recommendation</strong>: "Consider scaling up your warehouse size or enabling auto-scaling."</li>
             <li><strong>Simulation</strong>: Impact of adding 50 credits to daily usage.</li>
         </ul>
-        <p>By following these steps, you can build a <strong>Capacity Planning AI Agent</strong> locally using Snowflake data and DeepSeek (or other AI frameworks). This agent will help you forecast future capacity needs, provide scaling recommendations, and simulate the impact of new workloads.</p>
+        <p>By following these steps, you can build a <strong>Capacity Planning AI Agent</strong> locally using insidewithai data and DeepSeek (or other AI frameworks). This agent will help you forecast future capacity needs, provide scaling recommendations, and simulate the impact of new workloads.</p>
     </main>
     <footer>
         <p>&copy; 2023 Inside with AI. All rights reserved.</p>
