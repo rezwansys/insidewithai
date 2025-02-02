@@ -3,31 +3,14 @@ body {
     margin: 0;
     padding: 0;
     line-height: 1.6;
+    background-color: #f4f4f4;
 }
 
 header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 0;
-    text-align: center;
-}
-
-main {
-    padding: 20px;
-}
-
-section {
-    margin-bottom: 20px;
-}
-
-footer {
     background-color: #333;
     color: white;
-    text-align: center;
     padding: 10px 0;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
+    text-align: center;
 }
 
 nav ul {
@@ -35,7 +18,7 @@ nav ul {
     padding: 0;
     display: flex;
     justify-content: center;
-    background-color: #333;
+    background-color: #444;
 }
 
 nav ul li {
@@ -50,5 +33,27 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    background-color: #4CAF50;
-} 
+    background-color: #555;
+}
+
+main {
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 20px;
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
